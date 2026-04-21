@@ -69,7 +69,7 @@
 </div>
 
 <script>
-  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
   function showTasks() {
     let list = document.getElementById("list");
@@ -77,8 +77,15 @@
 
     tasks.forEach((task, index) => {
       let li = document.createElement("li");
-      li.innerHTML = task + 
-      ` <button class="delete" onclick="deleteTask(${index})">X</button>`;
+
+      li.innerHTML = `
+        ${task}
+        <div>
+          <button onclick="editTask(${index})">✏️</button>
+          <button class="delete" onclick="deleteTask(${index})">X</button>
+        </div>
+      `;
+
       list.appendChild(li);
     });
   }
@@ -100,8 +107,17 @@
     showTasks();
   }
 
+  function editTask(index) {
+    let newTask = prompt("Edit your task:", tasks[index]);
+
+    if (newTask !== null && newTask.trim() !== "") {
+      tasks[index] = newTask;
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      showTasks();
+    }
+  }
+
   showTasks();
 </script>
-
 </body>
 </html>
