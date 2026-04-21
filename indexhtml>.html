@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="style.css"
+</head>
+<body>
+    <div class="container"
+
+<h2>My To-Do List</h2>
+
+<input id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add</button>
+
+<ul id="taskList"></ul>
+
+<script>
+window.onload = loadTasks;
+
+function addTask() {
+    let input = document.getElementById("taskInput");
+    let task = input.value;
+
+    if (task === "") {
+        alert("Enter something");
+        return;
+    }
+
+    createTask(task);
+    saveTask(task);
+    input.value = "";
+}
+
+function createTask(task) {
+    let li = document.createElement("li");
+    li.innerText = task;
+
+    // click = complete
+    li.onclick = function () {
+        li.style.textDecoration = "line-through";
+    };
+
+    // double click = delete
+    li.ondblclick = function () {
+        li.remove();
+        removeTask(task);
+    };
+
+    document.getElementById("taskList").appendChild(li);
+}
+
+function saveTask(task) {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.forEach(task => createTask(task));
+}
+
+function removeTask(taskToRemove) {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks = tasks.filter(task => task !== taskToRemove);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+</script>
+</div>
+
+</body>
+</html>
