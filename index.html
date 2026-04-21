@@ -1,72 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>To-Do App</title>
-    <link rel="stylesheet" href="style.css"
-</head>
-<body>
-    <div class="container"
-
-<h2>My To-Do List</h2>
-
-<input id="taskInput" placeholder="Enter task">
-<button onclick="addTask()">Add</button>
-
-<ul id="taskList"></ul>
-
-<script>
-window.onload = loadTasks;
-
-function addTask() {
-    let input = document.getElementById("taskInput");
-    let task = input.value;
-
-    if (task === "") {
-        alert("Enter something");
-        return;
+  <title>My Todo App</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    createTask(task);
-    saveTask(task);
-    input.value = "";
-}
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
 
-function createTask(task) {
-    let li = document.createElement("li");
-    li.innerText = task;
+    h2 {
+      margin-bottom: 15px;
+    }
 
-    // click = complete
-    li.onclick = function () {
-        li.style.textDecoration = "line-through";
-    };
+    input {
+      width: 70%;
+      padding: 8px;
+    }
 
-    // double click = delete
-    li.ondblclick = function () {
-        li.remove();
-        removeTask(task);
-    };
+    button {
+      padding: 8px;
+      cursor: pointer;
+      border: none;
+      background: #667eea;
+      color: white;
+      border-radius: 5px;
+    }
 
-    document.getElementById("taskList").appendChild(li);
-}
+    li {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      background: #f1f1f1;
+      padding: 5px;
+      border-radius: 5px;
+    }
 
-function saveTask(task) {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    .delete {
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>✨ My Todo App</h2>
+
+  <input type="text" id="task" placeholder="Enter task">
+  <button onclick="addTask()">Add</button>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  function showTasks() {
+    let list = document.getElementById("list");
+    list.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+      let li = document.createElement("li");
+      li.innerHTML = task + 
+      ` <button class="delete" onclick="deleteTask(${index})">X</button>`;
+      list.appendChild(li);
+    });
+  }
+
+  function addTask() {
+    let task = document.getElementById("task").value;
+    if (task === "") return;
+
     tasks.push(task);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+    document.getElementById("task").value = "";
 
-function loadTasks() {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks.forEach(task => createTask(task));
-}
+    showTasks();
+  }
 
-function removeTask(taskToRemove) {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks = tasks.filter(task => task !== taskToRemove);
+  function deleteTask(index) {
+    tasks.splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+    showTasks();
+  }
+
+  showTasks();
 </script>
-</div>
 
 </body>
 </html>
